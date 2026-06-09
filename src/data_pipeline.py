@@ -1,7 +1,7 @@
 import tensorflow as tf
 
 IMG_SIZE = 224
-BATCH_SIZE = 32
+BATCH_SIZE = 16 
 
 def parse_tfrecord(example_proto):
     feature_description = {
@@ -17,8 +17,27 @@ def parse_tfrecord(example_proto):
     label = parsed_features['image/class/label']
     return image, label
 
-def load_dataset(filepaths):
-    dataset = tf.data.TFRecordDataset(filepaths)
+def load_dataset(filepaths, is_training=True):
+    dataset = tf.data.Dataset.from_tensor_slices(filepaths)
+    
+    if is_training:
+        dataset = dataset.shuffle(len(filepaths))
+
+    dataset = dataset.interleave(
+        lambda x: tf.data.TFRecordDataset(x),
+        cycle_length=tf.data.AUTOTUNE,
+        num_parallel_calls=tf.data.AUTOTUNE,
+
+        deterministic=not is_training 
+    )
+    
+
     dataset = dataset.map(parse_tfrecord, num_parallel_calls=tf.data.AUTOTUNE)
-    dataset = dataset.shuffle(1000).batch(BATCH_SIZE).prefetch(tf.data.AUTOTUNE)
+    
+
+    if is_training:
+        dataset = dataset.shuffle(10000)
+        
+
+    dataset = dataset.batch(BATCH_SIZE, drop_remainder=True).repeat().prefetch(tf.data.AUTOTUNE)
     return dataset
