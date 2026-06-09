@@ -35,4 +35,4 @@ def testar_imagem(caminho_imagem, caminho_modelo):
 
 if __name__ == '__main__':
 
-    testar_imagem('amostra_001.jpg', 'marco_model.keras')
+    testar_imagem('../images/amostra_001.jpg', 'marco_model.keras')
