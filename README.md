@@ -90,3 +90,8 @@ python main_webcam.py
 *   Milena Garcia - RM555111
 *   Renan Simões Gonçalves - RM555584
 *   Vinicius Vilas Boas - RM557843
+
+## Video
+
+https://youtu.be/Vs8-cNZU1Kw
+
